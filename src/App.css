@@ -13,3 +13,23 @@
 .content__dropzone-text {
   margin: auto;
 }
+
+.content__file-info {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.content__file-info-unit {
+  margin: 0px 20px;
+  padding: 12px 20px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
+
+.content__file-info-key {
+  font-weight: bold;
+  color: #6200ee;
+  margin-right: 1em;
+}
