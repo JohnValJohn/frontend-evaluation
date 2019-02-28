@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import ReactDropzone from "react-dropzone";
 import FileInfos from "./FileInfos";
-// import classNames from "classnames";
 
 export default class Dropzone extends Component {
   constructor() {
     super();
     this.state = {
-      file: { name: "" }
+      file: { name: "" },
+      binaryFile: {}
     };
     this.onDrop = this.onDrop.bind(this);
   }
@@ -43,10 +43,41 @@ export default class Dropzone extends Component {
 
   onDrop = (acceptedFiles, rejectedFiles) => {
     if (acceptedFiles.length > 0) {
+      console.log(acceptedFiles[0]);
       this.setState({ file: acceptedFiles[0] });
+      this.getArrayBuffer(acceptedFiles[0])
+        .then(arrayBuffer => {
+          const url = "https://fhirtest.uhn.ca/baseDstu3/Binary";
+          console.log("finished reading");
+          console.log(arrayBuffer);
+          fetch(url, { method: "POST", body: arrayBuffer })
+            .then(response => {
+              console.log("post ok");
+            })
+            .catch(error => console.log("there was an error posting"));
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
     if (rejectedFiles.length > 0) {
       console.log("the following files were rejected", rejectedFiles); //TODO proper on-screen warning to user
     }
   };
+
+  getArrayBuffer(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onabort = () => {
+        reject("file reading aborted");
+      };
+      reader.onerror = () => {
+        reject("error reading file");
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  }
 }
